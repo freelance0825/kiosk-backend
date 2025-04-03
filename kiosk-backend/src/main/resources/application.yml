@@ -1,0 +1,36 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: kiosk-backend
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/kiosk_db
+    username: postgres
+    password: root
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update  # Ensures Hibernate updates schema automatically
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  flyway:
+    enabled: true
+    locations: classpath:Database
+    baseline-on-migrate: true
+    sql-migration-prefix: V
+    sql-migration-separator: "__"
+    placeholder-replacement: true
+
+  sql:
+    init:
+      schema-locations: classpath:Database/*.sql  # Reads all SQL files in the Database folder
+
+  security:
+    jwt:
+      secret-key: "s8#Gv2!kLz@rNp$QyW1^dTx3&VoUbKmC"  # Secure this in production
+      expiration: 86400000  # 24 hours in milliseconds (24 * 60 * 60 * 1000)
