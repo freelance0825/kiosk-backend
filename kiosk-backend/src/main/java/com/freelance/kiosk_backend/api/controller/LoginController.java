@@ -17,7 +17,7 @@ import java.util.List;
 @RequestMapping("/api/")
 @RequiredArgsConstructor
 @Slf4j
-public class UserController {
+public class LoginController {
 
     private final UserService userService;
 
@@ -51,7 +51,7 @@ public class UserController {
     }
 
     @PutMapping("/users/{id}")
-    public ResponseEntity<UserResponseDto> updatePatient(@PathVariable Long id,
+    public ResponseEntity<UserResponseDto> updateUsers(@PathVariable Long id,
                                                          @ModelAttribute UserRequestDto request) throws IOException {
         log.info("Received request for user with ID: {}", id);
 
