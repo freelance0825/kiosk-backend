@@ -1,0 +1,46 @@
+package com.freelance.kiosk_backend.domain.entity;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+@Entity
+@Getter
+@Setter
+@Table(name="appointment")
+public class AppointmentEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "doctor_id", nullable = false)
+    private DoctorEntity doctor;
+
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "patient_id", nullable = false)
+    private UserEntity patient;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "consult_id", nullable = true)
+    private PostConsultationEntity postConsultation;
+
+    @Column(columnDefinition = "TEXT")
+    private String imageBase64;
+
+    @Column(nullable = false)
+    private String date;
+
+    @Column(nullable = false)
+    private String time;
+
+    @Column(nullable = false)
+    private String year;
+
+    private String name;
+
+    private String specialization;
+
+    private String healthComplaints; // Optional description of the appointment's purpose
+}

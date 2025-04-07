@@ -29,6 +29,8 @@ public class UserEntity {
     @Column(name = "date_of_birth")
     private String dateOfBirth;
 
+    private String email;
+
     @Column(name = "phone_number")
     private String phoneNumber;
 

@@ -44,4 +44,10 @@ public class DoctorController {
         List<DoctorResponseDto> doctors = doctorService.getAllDoctors();
         return ResponseEntity.ok(doctors);
     }
+
+    @GetMapping("/live")
+    public ResponseEntity<List<DoctorResponseDto>> getAllDoctorsLive() {
+        List<DoctorResponseDto> doctors = doctorService.getLiveDoctors("live");
+        return ResponseEntity.ok(doctors);
+    }
 }

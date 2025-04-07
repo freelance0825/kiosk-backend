@@ -25,6 +25,8 @@ public class UserResponseDto {
 
     private String phoneNumber;
 
+    private String email;
+
     @Column(columnDefinition = "TEXT")
     private String imageBase64;
 

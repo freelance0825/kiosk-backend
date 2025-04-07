@@ -12,4 +12,7 @@ public interface DoctorPersistencePort {
     Optional<DoctorEntity> findById(Long id);
 
     List<DoctorEntity> findAll();
+
+    Optional<List<DoctorEntity>> findAllByStatus(String status);
+
 }

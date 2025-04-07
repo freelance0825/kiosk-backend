@@ -68,6 +68,11 @@ public class DoctorService {
         return doctorMapper.toDtoList(doctorList);
     }
 
+    public List<DoctorResponseDto> getLiveDoctors(String status) {
+        List<DoctorEntity> doctorList = doctorPersistencePort.findAllByStatus(status).orElse(null);
+        return doctorMapper.toDtoList(doctorList);
+    }
+
 
     private void updateFieldsIfPresent(DoctorRequestDto request, DoctorEntity existingDoctor) {
         try {

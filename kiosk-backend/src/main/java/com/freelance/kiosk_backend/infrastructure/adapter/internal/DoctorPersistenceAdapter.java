@@ -32,4 +32,10 @@ public class DoctorPersistenceAdapter implements DoctorPersistencePort {
         return doctorRepository.findAll();
     }
 
+
+    @Override
+    public Optional<List<DoctorEntity>> findAllByStatus(String status) {
+        return doctorRepository.findAllByStatus(status);
+    }
+
 }

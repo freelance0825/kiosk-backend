@@ -62,6 +62,7 @@ public class UserService {
         user.setAge(request.getAge());
         user.setDateOfBirth(request.getDob());
         user.setPhoneNumber(request.getPhoneNumber());
+        user.setEmail(request.getEmail());
         user.setImageBase64(imageBase64);
 
         // Save user to database
@@ -124,6 +125,9 @@ public class UserService {
         }
         if (request.getPhoneNumber() != null && !request.getPhoneNumber().isEmpty()) {
             existingUser.setPhoneNumber(request.getPhoneNumber());
+        }
+        if (request.getEmail() != null && !request.getEmail().isEmpty()) {
+            existingUser.setEmail(request.getEmail());
         }
     }
 }

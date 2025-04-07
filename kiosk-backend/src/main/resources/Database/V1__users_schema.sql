@@ -3,8 +3,9 @@ CREATE TABLE users (
     name VARCHAR(100),
     age VARCHAR(10),
     gender VARCHAR(10),
+    email VARCHAR(100),
     address TEXT,
-    date_of_birth DATE,
-    phone_number VARCHAR(15) NOT NULL,
+    date_of_birth VARCHAR(50),
+    phone_number VARCHAR(15) ,
     image_base64 TEXT
 );
