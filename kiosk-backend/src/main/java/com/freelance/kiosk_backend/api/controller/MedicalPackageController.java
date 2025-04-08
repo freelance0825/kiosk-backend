@@ -9,6 +9,7 @@ import com.freelance.kiosk_backend.application.service.MedicalPackageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +26,7 @@ public class MedicalPackageController {
 
     private final CustomPackageService customPackageService;
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MedicalPackageResponseDto> createMedicalPackage(@RequestBody MedicalPackageRequestDto request) throws IOException {
         try {
             MedicalPackageResponseDto medicalPackage = medicalPackageService.createPackage(request);
@@ -37,7 +38,7 @@ public class MedicalPackageController {
         }
     }
 
-    @PostMapping("/custom")
+    @PostMapping(value = "/custom", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CustomPackageResponseDto> createCustomPackage(@RequestBody CustomPackageRequestDto request) throws IOException {
         try {
             CustomPackageResponseDto customPackage = customPackageService.createPackage(request);
@@ -49,12 +50,12 @@ public class MedicalPackageController {
         }
     }
 
-    @GetMapping
+    @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public List<MedicalPackageResponseDto> getAllMedicalPackages() {
         return medicalPackageService.getAllMedicalPackages();
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MedicalPackageResponseDto> updateMedicalPackage(@PathVariable Long id,
                                                                           @RequestBody MedicalPackageRequestDto request) {
         try {

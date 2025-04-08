@@ -1,7 +1,6 @@
 package com.freelance.kiosk_backend.application.dto.medicine;
 
 import com.freelance.kiosk_backend.application.dto.postconsultation.PostConsultationResponseDto;
-import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,6 +22,5 @@ public class MedicineDto {
 
     private PostConsultationResponseDto postConsultation;
 
-    @Column(columnDefinition = "TEXT")
     private String imageBase64;
 }

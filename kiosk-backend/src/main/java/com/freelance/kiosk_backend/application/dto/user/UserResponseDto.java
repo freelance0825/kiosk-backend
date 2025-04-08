@@ -2,7 +2,6 @@ package com.freelance.kiosk_backend.application.dto.user;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,7 +26,6 @@ public class UserResponseDto {
 
     private String email;
 
-    @Column(columnDefinition = "TEXT")
     private String imageBase64;
 
 }

@@ -49,7 +49,7 @@ public class DoctorService {
                     .orElseThrow(() -> new IOException("Doctor not found for ID: " + id));
 
             // Update fields only if present in the request
-            updateFieldsIfPresent(request, existingDoctor);
+            doctorMapper.updateDoctorsFromDto(request, existingDoctor);
 
             // Save the updated doctor entity
             DoctorEntity updatedDoctor = doctorPersistencePort.save(existingDoctor);
@@ -71,53 +71,6 @@ public class DoctorService {
     public List<DoctorResponseDto> getLiveDoctors(String status) {
         List<DoctorEntity> doctorList = doctorPersistencePort.findAllByStatus(status).orElse(null);
         return doctorMapper.toDtoList(doctorList);
-    }
-
-
-    private void updateFieldsIfPresent(DoctorRequestDto request, DoctorEntity existingDoctor) {
-        try {
-            // Update the fields only if the field is present in the request (i.e., non-null)
-            if (request.getImage() != null) {
-                existingDoctor.setImageBase64(encodeImageToBase64(request.getImage()));
-            }
-            if (request.getName() != null) {
-                existingDoctor.setName(request.getName());
-            }
-            if (request.getReview() != null) {
-                existingDoctor.setReview(request.getReview());
-            }
-            if (request.getSpecialization() != null) {
-                existingDoctor.setSpecialization(request.getSpecialization());
-            }
-            if (request.getState() != null) {
-                existingDoctor.setState(request.getState());
-            }
-            if (request.getStatus() != null) {
-                existingDoctor.setStatus(request.getStatus());
-            }
-            if (request.getClinic() != null) {
-                existingDoctor.setClinic(request.getClinic());
-            }
-            if (request.getGender() != null) {
-                existingDoctor.setGender(request.getGender());
-            }
-            if (request.getAge() != null) {
-                existingDoctor.setAge(request.getAge());
-            }
-            if (request.getDob() != null) {
-                existingDoctor.setDob(request.getDob());
-            }
-            if (request.getEmail() != null) {
-                existingDoctor.setEmail(request.getEmail());
-            }
-            if (request.getPassword() != null) {
-                existingDoctor.setPassword(request.getPassword());
-            }
-
-        } catch (IOException e) {
-            log.error("Error encoding image to Base64", e);
-            throw new RuntimeException("Error encoding image to Base64", e);
-        }
     }
 
     // Helper method to encode an image file to Base64

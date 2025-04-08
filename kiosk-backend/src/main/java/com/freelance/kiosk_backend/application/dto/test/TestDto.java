@@ -1,6 +1,5 @@
 package com.freelance.kiosk_backend.application.dto.test;
 
-import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,6 +11,5 @@ public class TestDto {
 
     private String name;
 
-    @Column(columnDefinition = "TEXT")
     private String icon;
 }

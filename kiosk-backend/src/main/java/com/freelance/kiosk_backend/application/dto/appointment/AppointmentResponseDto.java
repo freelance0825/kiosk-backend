@@ -3,7 +3,6 @@ package com.freelance.kiosk_backend.application.dto.appointment;
 import com.freelance.kiosk_backend.application.dto.doctor.DoctorResponseDto;
 import com.freelance.kiosk_backend.application.dto.postconsultation.PostConsultationResponseDto;
 import com.freelance.kiosk_backend.application.dto.user.UserResponseDto;
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,16 +18,12 @@ public class AppointmentResponseDto {
 
     private PostConsultationResponseDto postConsultation;
 
-    @Column(columnDefinition = "TEXT")
     private String imageBase64;
 
-    @Column(nullable = false)
     private String date;
 
-    @Column(nullable = false)
     private String time;
 
-    @Column(nullable = false)
     private String year;
 
     private String name;

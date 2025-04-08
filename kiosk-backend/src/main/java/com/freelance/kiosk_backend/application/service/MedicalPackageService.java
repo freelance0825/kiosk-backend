@@ -27,7 +27,6 @@ public class MedicalPackageService {
             log.info("Creating a new medical package with name: {}", request.getName());
             log.info("Streams initial: {}", request.getTests());
 
-
             MedicalPackageEntity medicalPackage = new MedicalPackageEntity();
             medicalPackage.setName(request.getName());
             medicalPackage.setIcon(request.getImageBase64());
@@ -82,4 +81,3 @@ public class MedicalPackageService {
     }
 
 }
-

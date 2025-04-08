@@ -3,8 +3,7 @@ package com.freelance.kiosk_backend.domain.mapper;
 import com.freelance.kiosk_backend.application.dto.doctor.DoctorRequestDto;
 import com.freelance.kiosk_backend.application.dto.doctor.DoctorResponseDto;
 import com.freelance.kiosk_backend.domain.entity.DoctorEntity;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
 
 import java.util.List;
 
@@ -17,5 +16,8 @@ public interface DoctorMapper {
     DoctorResponseDto toDto(DoctorEntity entity);
 
     List<DoctorResponseDto> toDtoList(List<DoctorEntity> doctorEntities);
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void updateDoctorsFromDto(DoctorRequestDto dto, @MappingTarget DoctorEntity entity);
 
 }

@@ -1,6 +1,5 @@
 package com.freelance.kiosk_backend.application.dto.doctor;
 
-import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +9,6 @@ public class DoctorResponseDto {
 
     private Long id;
 
-    @Column(columnDefinition = "TEXT")
     private String imageBase64;
 
     private String name;
