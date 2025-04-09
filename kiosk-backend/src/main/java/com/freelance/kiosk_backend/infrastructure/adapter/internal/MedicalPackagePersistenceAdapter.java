@@ -13,7 +13,7 @@ import java.util.Optional;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class MedicalPackageAdapter implements MedicalPackagePersistencePort {
+public class MedicalPackagePersistenceAdapter implements MedicalPackagePersistencePort {
 
     private final MedicalPackageRepository medicalPackageRepository;
 

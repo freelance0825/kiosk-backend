@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class CustomPackageAdapter implements CustomPackagePersistencePort {
+public class CustomPackagePersistenceAdapter implements CustomPackagePersistencePort {
 
     private final CustomPackageRepository customPackageRepository;
 
