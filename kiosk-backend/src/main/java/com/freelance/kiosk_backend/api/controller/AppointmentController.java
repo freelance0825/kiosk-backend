@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/appointment")
+@RequestMapping("/api/appointments")
 @RequiredArgsConstructor
 @Slf4j
 public class AppointmentController {
