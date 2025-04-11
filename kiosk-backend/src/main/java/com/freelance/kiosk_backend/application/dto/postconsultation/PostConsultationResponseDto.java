@@ -20,9 +20,9 @@ public class PostConsultationResponseDto {
 
     //private UserResponseDto patient;
 
-    //private AppointmentResponseDto appointment;
+    private AppointmentResponseDto appointment;
 
-    //private List<MedicineDto> medicines; // List of prescriptions with medicines
+    private List<MedicineDto> medicines; // List of prescriptions with medicines
 
     private LocalDateTime dateTime;
 
