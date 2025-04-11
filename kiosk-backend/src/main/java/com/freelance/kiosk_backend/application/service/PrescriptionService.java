@@ -25,7 +25,7 @@ public class PrescriptionService {
 
     private final PrescriptionMapper prescriptionMapper;
 
-    private final PostConsultationMapper postConsultationMapper;
+   // private final PostConsultationMapper postConsultationMapper;
 
     /*public PrescriptionResponseDto createPrescription(MedicineDto medicineDto) throws IOException {
 
@@ -51,7 +51,6 @@ public class PrescriptionService {
 
         // Link prescription to its parent consultation
         prescription.setPostConsultation(postConsultation);
-
         log.info("Prescription saved: {}", prescription);
 
         // Save and return
