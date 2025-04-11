@@ -20,7 +20,10 @@ public class MedicineDto {
 
     private String duration;
 
-    private PostConsultationResponseDto postConsultation;
+    // NEW: Only keep ID reference to avoid circular dependency
+    private Long postConsultationId;
+
+    // private PostConsultationResponseDto postConsultation;
 
     private String imageBase64;
 }

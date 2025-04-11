@@ -2,6 +2,7 @@ package com.freelance.kiosk_backend.application.dto.postconsultation;
 
 import com.freelance.kiosk_backend.application.dto.appointment.AppointmentResponseDto;
 import com.freelance.kiosk_backend.application.dto.doctor.DoctorResponseDto;
+import com.freelance.kiosk_backend.application.dto.medicine.AppointmentDto;
 import com.freelance.kiosk_backend.application.dto.medicine.MedicineDto;
 import com.freelance.kiosk_backend.application.dto.user.UserResponseDto;
 import lombok.Getter;
@@ -16,11 +17,13 @@ public class PostConsultationResponseDto {
 
     private Long id;
 
-    //private DoctorResponseDto doctor;
+    private DoctorResponseDto doctor;
 
-    //private UserResponseDto patient;
+    private UserResponseDto patient;
 
-    private AppointmentResponseDto appointment;
+   // private AppointmentResponseDto appointment;
+
+    private AppointmentDto appointment;
 
     private List<MedicineDto> medicines; // List of prescriptions with medicines
 

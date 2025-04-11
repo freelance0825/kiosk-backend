@@ -4,6 +4,7 @@ import com.freelance.kiosk_backend.application.dto.postconsultation.PostConsulta
 import com.freelance.kiosk_backend.application.dto.postconsultation.PostConsultationResponseDto;
 import com.freelance.kiosk_backend.domain.entity.PostConsultationEntity;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface PostConsultationMapper {
@@ -12,5 +13,6 @@ public interface PostConsultationMapper {
 
     PostConsultationEntity mapToEntity(PostConsultationRequestDto requestDto);
 
+    @Mapping(target= "appointment", source="appointment")
     PostConsultationResponseDto toDto(PostConsultationEntity postConsultationEntity);
 }

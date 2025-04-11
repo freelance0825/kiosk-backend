@@ -62,11 +62,20 @@ public class PostConsultationService {
         // Convert PostConsultationEntity to PostConsultationResponseDto for setting in MedicineDto
         PostConsultationResponseDto postConsultationDto = postConsultationMapper.toDto(postConsultationExist);
 
-        // Directly prepare the prescription medicines list and set the PostConsultationResponseDto
+       /* // Directly prepare the prescription medicines list and set the PostConsultationResponseDto
         List<MedicineDto> prescriptionMedicines = request.getMedicines()
                 .stream()
                 .map(medicineDto -> {
                     medicineDto.setPostConsultation(postConsultationDto);  // Set the PostConsultationResponseDto
+                    return medicineDto;
+                })
+                .toList();*/
+
+        // Prepare the prescription medicines without setting full PostConsultationResponseDto
+        List<MedicineDto> prescriptionMedicines = request.getMedicines()
+                .stream()
+                .map(medicineDto -> {
+                    medicineDto.setPostConsultationId(savedPostConsultation.getId()); // just pass the ID
                     return medicineDto;
                 })
                 .toList();
