@@ -11,6 +11,7 @@ import java.util.List;
 public interface UserMapper {
 
     @Mapping(target = "imageBase64", ignore = true) // Ignore image encoding in the mapping
+    @Mapping(target = "dateOfBirth", source = "dob")
     UserEntity toEntity(UserRequestDto dto);
 
     UserResponseDto toDto (UserEntity userEntity);
@@ -18,6 +19,7 @@ public interface UserMapper {
     List<UserResponseDto> toDtoList(List<UserEntity> userEntity);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "dateOfBirth", source = "dob")
     void updateUsersFromDto(UserRequestDto dto, @MappingTarget UserEntity entity);
 
 }
