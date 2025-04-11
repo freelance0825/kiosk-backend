@@ -3,6 +3,9 @@ package com.freelance.kiosk_backend.domain.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -29,14 +32,9 @@ public class AppointmentEntity {
     @Column(columnDefinition = "TEXT")
     private String imageBase64;
 
-    @Column(nullable = false)
-    private String date;
-
-    @Column(nullable = false)
-    private String time;
-
-    @Column(nullable = false)
-    private String year;
+    @Column(name = "date_time",nullable = false)
+    @UpdateTimestamp
+    private LocalDateTime dateTime;
 
     private String name;
 

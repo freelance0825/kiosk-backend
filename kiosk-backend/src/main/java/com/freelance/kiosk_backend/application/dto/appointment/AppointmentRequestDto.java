@@ -4,6 +4,8 @@ import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 public class AppointmentRequestDto {
@@ -14,11 +16,7 @@ public class AppointmentRequestDto {
 
     private Long patientId;
 
-    private String date;
-
-    private String time;
-
-    private String year;
+    private LocalDateTime dateTime;
 
     private String healthComplaints;
 

@@ -26,8 +26,8 @@ public class PostConsultationController {
     public ResponseEntity<PostConsultationResponseDto> createPostConsultation(@RequestBody PostConsultationRequestDto request) throws IOException {
         try {
             // Log input data
-            log.info("Creating PostConsultation: doctorId={}, patientId={}, date={}, time={}, year={}, diagnosis={}, suggestions={}, followUpDate={}, signature={}",
-                    request.getDoctorId(), request.getPatientId(), request.getDate(), request.getTime(), request.getYear(),
+            log.info("Creating PostConsultation: doctorId={}, patientId={}, updatedAt={}, diagnosis={}, suggestions={}, followUpDate={}, signature={}",
+                    request.getDoctorId(), request.getPatientId(), request.getUpdatedAt(),
                     request.getDiagnosis(), request.getSuggestions(), request.getFollowUpDate(), request.getSignature());
 
             // Call service method

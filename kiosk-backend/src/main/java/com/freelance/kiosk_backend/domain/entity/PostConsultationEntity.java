@@ -4,7 +4,9 @@ import com.freelance.kiosk_backend.application.dto.medicine.MedicineDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -34,14 +36,9 @@ public class PostConsultationEntity {
     @Transient // This tells JPA to ignore this field during persistence
     private List<MedicineDto> medicines;
 
-    @Column(nullable = false)
-    private String date;
-
-    @Column(nullable = false)
-    private String time;
-
-    @Column(nullable = false)
-    private String year;
+    @Column(name = "date_time",nullable = false)
+    @UpdateTimestamp
+    private LocalDateTime dateTime;
 
     private String diagnosis;
 

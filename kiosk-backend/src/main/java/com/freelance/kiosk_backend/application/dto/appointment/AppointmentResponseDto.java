@@ -6,6 +6,8 @@ import com.freelance.kiosk_backend.application.dto.user.UserResponseDto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 public class AppointmentResponseDto {
@@ -20,13 +22,7 @@ public class AppointmentResponseDto {
 
     private String imageBase64;
 
-    private String date;
-
-    private String time;
-
-    private String year;
-
-    private String name;
+    private LocalDateTime dateTime;
 
     private String specialization;
 

@@ -7,6 +7,7 @@ import com.freelance.kiosk_backend.application.dto.user.UserResponseDto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -23,11 +24,7 @@ public class PostConsultationResponseDto {
 
     //private List<MedicineDto> medicines; // List of prescriptions with medicines
 
-    private String date;
-
-    private String time;
-
-    private String year;
+    private LocalDateTime dateTime;
 
     private String diagnosis;
 
