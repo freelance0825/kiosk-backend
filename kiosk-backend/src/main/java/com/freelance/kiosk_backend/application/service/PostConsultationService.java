@@ -55,27 +55,17 @@ public class PostConsultationService {
         // Save the post consultation
         PostConsultationEntity savedPostConsultation = postConsultationPersistencePort.save(postConsultation);
 
-        // Get saved entity again in case you need related objects (optional)
-        PostConsultationEntity postConsultationExist = postConsultationPersistencePort.findById(savedPostConsultation.getId())
-                .orElseThrow(() -> new IllegalArgumentException("Post Consultation not found"));
+        // Link the saved post consultation back to the appointment
+        appointment.setPostConsultation(savedPostConsultation);
 
-        // Convert PostConsultationEntity to PostConsultationResponseDto for setting in MedicineDto
-        PostConsultationResponseDto postConsultationDto = postConsultationMapper.toDto(postConsultationExist);
+        // Save updated appointment so consult_id is persisted
+        appointmentPersistencePort.save(appointment);
 
-       /* // Directly prepare the prescription medicines list and set the PostConsultationResponseDto
+        // Prepare the prescription medicines and attach postConsultationId only
         List<MedicineDto> prescriptionMedicines = request.getMedicines()
                 .stream()
                 .map(medicineDto -> {
-                    medicineDto.setPostConsultation(postConsultationDto);  // Set the PostConsultationResponseDto
-                    return medicineDto;
-                })
-                .toList();*/
-
-        // Prepare the prescription medicines without setting full PostConsultationResponseDto
-        List<MedicineDto> prescriptionMedicines = request.getMedicines()
-                .stream()
-                .map(medicineDto -> {
-                    medicineDto.setPostConsultationId(savedPostConsultation.getId()); // just pass the ID
+                    medicineDto.setPostConsultationId(savedPostConsultation.getId());
                     return medicineDto;
                 })
                 .toList();
@@ -85,7 +75,7 @@ public class PostConsultationService {
             prescriptionService.createPrescription(medicineDto);
         }
 
-        // Return DTO using mapper
+        // Return the final response DTO
         return postConsultationMapper.toDto(savedPostConsultation);
     }
 }
