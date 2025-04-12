@@ -79,9 +79,16 @@ public class AppointmentService {
 
     public AppointmentResponseDto getAppointmentById(Long id) {
         AppointmentEntity appointmentEntity = appointmentPersistencePort.findById(id).orElse(null);
+        AppointmentResponseDto responseDto = appointmentMapper.toDto(appointmentEntity);
 
-        return appointmentMapper.toDto(appointmentEntity);
+        // Manually populate the medicines for the postConsultation in the response
+        if (responseDto != null && responseDto.getPostConsultation() != null) {
+            populateMedicines(responseDto.getPostConsultation());
+        }
+
+        return responseDto;
     }
+
 
     // Fetch appointments by patient ID
     public List<AppointmentResponseDto> getAppointmentsByPatientId(Long patientId) {
@@ -100,7 +107,15 @@ public class AppointmentService {
 
     public List<AppointmentResponseDto> getAppointmentsByDoctorId(Long doctorId) {
         List<AppointmentEntity> appointmentList = appointmentPersistencePort.findByDoctorId(doctorId);
-        return appointmentMapper.toDtoList(appointmentList);
+        List<AppointmentResponseDto> responseDtos =  appointmentMapper.toDtoList(appointmentList);
+        // Manually populate the medicines for each postConsultation in the response
+        for (AppointmentResponseDto dto : responseDtos) {
+            if (dto.getPostConsultation() != null) {
+                populateMedicines(dto.getPostConsultation());
+            }
+        }
+
+        return responseDtos;
     }
 
     @Transactional
