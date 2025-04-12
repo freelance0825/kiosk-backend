@@ -11,7 +11,7 @@ public interface AppointmentPersistencePort {
 
     Optional<AppointmentEntity> findById(Long id);
 
-    List<AppointmentEntity> findByPatientId(Long patientId);
+    List<AppointmentEntity> findByPatientIdWithPostConsultation(Long patientId);
 
     List<AppointmentEntity> findByDoctorId(Long doctorId);
 

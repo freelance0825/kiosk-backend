@@ -2,12 +2,16 @@ package com.freelance.kiosk_backend.application.service;
 
 import com.freelance.kiosk_backend.application.dto.appointment.AppointmentRequestDto;
 import com.freelance.kiosk_backend.application.dto.appointment.AppointmentResponseDto;
+import com.freelance.kiosk_backend.application.dto.appointment.PostConsultationForAppointmentDto;
+import com.freelance.kiosk_backend.application.dto.medicine.MedicineDto;
 import com.freelance.kiosk_backend.domain.entity.AppointmentEntity;
 import com.freelance.kiosk_backend.domain.entity.DoctorEntity;
+import com.freelance.kiosk_backend.domain.entity.PrescriptionEntity;
 import com.freelance.kiosk_backend.domain.entity.UserEntity;
 import com.freelance.kiosk_backend.domain.mapper.AppointmentMapper;
 import com.freelance.kiosk_backend.infrastructure.port.AppointmentPersistencePort;
 import com.freelance.kiosk_backend.infrastructure.port.DoctorPersistencePort;
+import com.freelance.kiosk_backend.infrastructure.port.PrescriptionPersistencePort;
 import com.freelance.kiosk_backend.infrastructure.port.UserPersistencePort;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +28,8 @@ import java.util.List;
 public class AppointmentService {
 
     private final AppointmentPersistencePort appointmentPersistencePort;
+
+    private final PrescriptionPersistencePort prescriptionPersistencePort;
 
     private final AppointmentMapper appointmentMapper;
 
@@ -76,9 +83,19 @@ public class AppointmentService {
         return appointmentMapper.toDto(appointmentEntity);
     }
 
+    // Fetch appointments by patient ID
     public List<AppointmentResponseDto> getAppointmentsByPatientId(Long patientId) {
-        List<AppointmentEntity> appointmentList = appointmentPersistencePort.findByPatientId(patientId);
-        return appointmentMapper.toDtoList(appointmentList);
+        List<AppointmentEntity> appointmentList = appointmentPersistencePort.findByPatientIdWithPostConsultation(patientId);
+        List<AppointmentResponseDto> responseDtos = appointmentMapper.toDtoList(appointmentList);
+
+        // Manually populate the medicines for each postConsultation in the response
+        for (AppointmentResponseDto dto : responseDtos) {
+            if (dto.getPostConsultation() != null) {
+                populateMedicines(dto.getPostConsultation());
+            }
+        }
+
+        return responseDtos;
     }
 
     public List<AppointmentResponseDto> getAppointmentsByDoctorId(Long doctorId) {
@@ -116,4 +133,22 @@ public class AppointmentService {
         entity.setImageBase64(doctor.getImageBase64());
         return entity;
     }
+
+    // Manually populate medicines from PrescriptionEntity for each PostConsultation
+    private void populateMedicines(PostConsultationForAppointmentDto postConsultation) {
+        // Assuming PostConsultationEntity has a list of prescriptions
+        if (postConsultation != null && postConsultation.getId() != null) {
+            // Fetch the prescriptions related to the current postConsultation
+            List<PrescriptionEntity> prescriptions = prescriptionPersistencePort.findByPostConsultationId(postConsultation.getId());
+
+            // Map the prescriptions to MedicineDto
+            List<MedicineDto> medicines = prescriptions.stream()
+                    .map(appointmentMapper::toMedicineDto)
+                    .collect(Collectors.toList());
+
+            // Set the medicines in the PostConsultation DTO
+            postConsultation.setMedicines(medicines);
+        }
+    }
+
 }

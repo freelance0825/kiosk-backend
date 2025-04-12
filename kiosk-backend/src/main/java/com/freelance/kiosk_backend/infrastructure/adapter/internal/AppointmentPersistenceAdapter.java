@@ -28,8 +28,8 @@ public class AppointmentPersistenceAdapter implements AppointmentPersistencePort
     }
 
     @Override
-    public List<AppointmentEntity> findByPatientId(Long patientId) {
-        return appointmentRepository.findByPatientId(patientId);
+    public List<AppointmentEntity> findByPatientIdWithPostConsultation(Long patientId) {
+        return appointmentRepository.findByPatientIdWithPostConsultation(patientId);
     }
 
     @Override

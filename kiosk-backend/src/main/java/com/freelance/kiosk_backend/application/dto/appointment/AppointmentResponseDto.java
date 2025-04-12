@@ -18,7 +18,7 @@ public class AppointmentResponseDto {
 
     private UserResponseDto patient;
 
-    private PostConsultationResponseDto postConsultation;
+    private PostConsultationForAppointmentDto postConsultation;
 
     private String imageBase64;
 

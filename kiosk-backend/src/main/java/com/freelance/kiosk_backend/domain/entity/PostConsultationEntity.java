@@ -37,7 +37,6 @@ public class PostConsultationEntity {
     private List<MedicineDto> medicines;
 
     @Column(name = "date_time",nullable = false)
-    @UpdateTimestamp
     private LocalDateTime dateTime;
 
     private String diagnosis;

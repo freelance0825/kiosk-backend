@@ -1,5 +1,6 @@
-package com.freelance.kiosk_backend.application.dto.postconsultation;
+package com.freelance.kiosk_backend.application.dto.appointment;
 
+import com.freelance.kiosk_backend.application.dto.medicine.AppointmentDto;
 import com.freelance.kiosk_backend.application.dto.medicine.MedicineDto;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,13 +10,9 @@ import java.util.List;
 
 @Getter
 @Setter
-public class PostConsultationRequestDto {
+public class PostConsultationForAppointmentDto {
 
-    private Long doctorId;
-
-    private Long patientId;
-
-    private Long appointmentId;
+    private Long id;
 
     private List<MedicineDto> medicines; // List of prescriptions with medicines
 
@@ -27,5 +24,6 @@ public class PostConsultationRequestDto {
 
     private String followUpDate;
 
-    private String signature; // Base64 s
+    private String signature; // Base64 signature image
+
 }
