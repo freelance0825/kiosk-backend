@@ -3,7 +3,6 @@ package com.freelance.kiosk_backend.domain.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -33,7 +32,6 @@ public class AppointmentEntity {
     private String imageBase64;
 
     @Column(name = "date_time",nullable = false)
-    @UpdateTimestamp
     private LocalDateTime dateTime;
 
     private String name;
