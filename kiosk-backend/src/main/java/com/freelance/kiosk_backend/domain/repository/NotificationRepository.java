@@ -14,4 +14,6 @@ public interface NotificationRepository extends JpaRepository<NotificationEntity
 
     //Traverses through appointment -> patient -> id
     List<NotificationEntity> findByAppointment_Patient_Id(Long patientId);
+
+    List<NotificationEntity> findByUsers_Id(Long userId);
 }

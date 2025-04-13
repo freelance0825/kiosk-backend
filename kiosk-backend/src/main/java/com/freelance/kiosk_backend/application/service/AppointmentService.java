@@ -53,6 +53,13 @@ public class AppointmentService {
             notification.setIsBooked(true);
             notification.setIsRescheduled(false);
             notification.setIsCancelled(false);
+            notification.setDoctor(doctor);
+            notification.setUsers(patient);
+            notification.setApptDateTime(saved.getDateTime());
+            notification.setApptDoctorName(doctor.getName());
+            notification.setApptDoctorSpecialization(doctor.getSpecialization());
+            notification.setApptUserName(patient.getName());
+
             notificationPersistencePort.save(notification);
 
             return appointmentMapper.toDto(saved);
@@ -65,32 +72,53 @@ public class AppointmentService {
     public AppointmentResponseDto updateAppointment(Long id, AppointmentRequestDto appointmentDto) throws IOException {
         log.info("Updating appointment with ID: {}", id);
         try {
-            AppointmentEntity existingAppointment = appointmentPersistencePort.findById(id)
-                    .orElseThrow(() -> new IOException("Appointment not found for ID: " + id));
+            AppointmentEntity existingAppointment = appointmentPersistencePort.findById(id).orElseThrow(() -> new IOException("Appointment not found for ID: " + id));
 
-            // Save the old datetime for comparison
             LocalDateTime oldDateTime = existingAppointment.getDateTime();
+            DoctorEntity oldDoctor = existingAppointment.getDoctor();
+
+            // Update doctor entity if provided in the request
+            if (appointmentDto.getName() != null) {
+                oldDoctor.setName(appointmentDto.getName());
+            }
+            if (appointmentDto.getSpecialization() != null) {
+                oldDoctor.setSpecialization(appointmentDto.getSpecialization());
+            }
+            doctorPersistencePort.save(oldDoctor);
 
             // Update appointment fields
             appointmentMapper.updateAppointmentFromDto(appointmentDto, existingAppointment);
 
-            // Save updated appointment
+            // Always update appointment snapshot fields for doctor
+            existingAppointment.setName(oldDoctor.getName());
+            existingAppointment.setSpecialization(oldDoctor.getSpecialization());
+
             AppointmentEntity updatedAppointment = appointmentPersistencePort.save(existingAppointment);
             log.info("Successfully updated appointment: {}", updatedAppointment.getName());
 
             boolean isRescheduled = oldDateTime != null && !oldDateTime.equals(updatedAppointment.getDateTime());
+            boolean isDoctorChanged = oldDoctor != null && !oldDoctor.equals(updatedAppointment.getDoctor());
 
-            if (isRescheduled) {
-                NotificationEntity notification = notificationPersistencePort.findByAppointmentId(id).
-                        orElseThrow(() -> new IllegalArgumentException("Notification not found for appointment ID: " + id));
+            // Update notification Table
+            if (isRescheduled || isDoctorChanged || appointmentDto.getName() != null || appointmentDto.getSpecialization() != null) {
+                NotificationEntity notification = notificationPersistencePort.findByAppointmentId(id)
+                        .orElseThrow(() -> new IllegalArgumentException("Notification not found for appointment ID: " + id));
 
-                // Update notification flags
+                // Update notification flags only if rescheduled
                 notification.setIsBooked(false);
-                notification.setIsRescheduled(true);
+                notification.setIsRescheduled(isRescheduled);
                 notification.setIsCancelled(false);
 
+                // Always update doctor details snapshot
+                notification.setApptDoctorName(oldDoctor.getName());
+                notification.setApptDoctorSpecialization(oldDoctor.getSpecialization());
+
+                if (isRescheduled) {
+                    notification.setApptDateTime(updatedAppointment.getDateTime());
+                }
+
                 notificationPersistencePort.save(notification);
-                log.info("Notification for appointment ID {} marked as rescheduled", id);
+                log.info("Notification for appointment ID {} updated due to changes", id);
             }
 
             return appointmentMapper.toDto(updatedAppointment);
@@ -100,6 +128,7 @@ public class AppointmentService {
             throw new IOException(e.getMessage());
         }
     }
+
 
     public AppointmentResponseDto getAppointmentById(Long id) {
         AppointmentEntity appointmentEntity = appointmentPersistencePort.findById(id).orElse(null);

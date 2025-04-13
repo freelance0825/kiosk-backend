@@ -2,8 +2,10 @@ package com.freelance.kiosk_backend.application.service;
 
 import com.freelance.kiosk_backend.application.dto.user.UserRequestDto;
 import com.freelance.kiosk_backend.application.dto.user.UserResponseDto;
+import com.freelance.kiosk_backend.domain.entity.NotificationEntity;
 import com.freelance.kiosk_backend.domain.entity.UserEntity;
 import com.freelance.kiosk_backend.domain.mapper.UserMapper;
+import com.freelance.kiosk_backend.infrastructure.port.NotificationPersistencePort;
 import com.freelance.kiosk_backend.infrastructure.port.UserPersistencePort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +23,8 @@ import java.util.Optional;
 public class UserService {
 
     private final UserPersistencePort userPersistencePort;
+
+    private final NotificationPersistencePort notificationPersistencePort;
 
     private final UserMapper userMapper;
 
@@ -84,8 +88,22 @@ public class UserService {
                 existingUser.setImageBase64(imageBase64);
             }
 
-            // Save the updated user and return the response DTO
-            return userMapper.toDto(userPersistencePort.save(existingUser));
+            // Save the updated user first
+            UserEntity savedUser = userPersistencePort.save(existingUser);
+
+            // Update notification(s) only if they're linked to an appointment
+            List<NotificationEntity> userNotifications = notificationPersistencePort.findByUserId(id);
+            for (NotificationEntity notification : userNotifications) {
+                if (notification.getAppointment() != null) {
+                    notification.setApptUserName(savedUser.getName());
+                    notificationPersistencePort.save(notification);
+                    log.info("Updated notification ID {} with new user name: {}", notification.getId(), savedUser.getName());
+                } else {
+                    log.info("Skipping notification ID {} - not linked to an appointment", notification.getId());
+                }
+            }
+
+            return userMapper.toDto(savedUser);
 
         } catch (Exception e) {
             log.error("Error updating user: {}", e.getMessage());

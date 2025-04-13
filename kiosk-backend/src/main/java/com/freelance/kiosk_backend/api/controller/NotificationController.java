@@ -23,8 +23,8 @@ public class NotificationController {
     private final NotificationService notificationService;
 
     @GetMapping(value = "/patient/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<NotificationResponseDto>> getNotificationsByAppointmentPatientId(@PathVariable Long id) {
-        List<NotificationResponseDto> notification = notificationService.getNotificationsByAppointmentPatientId(id);
+    public ResponseEntity<List<NotificationResponseDto>> getNotificationsByUserId(@PathVariable Long id) {
+        List<NotificationResponseDto> notification = notificationService.getNotificationsByUserId(id);
         if (notification != null) {
             return ResponseEntity.ok(notification);
         } else {

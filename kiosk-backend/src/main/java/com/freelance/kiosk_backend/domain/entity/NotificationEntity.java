@@ -26,6 +26,18 @@ public class NotificationEntity {
     @Column(name = "is_cancelled")
     private Boolean isCancelled = false;
 
+    @Column(name = "appt_date_time")
+    private LocalDateTime apptDateTime;
+
+    @Column(name = "appt_users_name")
+    private String apptUserName;
+
+    @Column(name = "appt_doctor_name")
+    private String apptDoctorName;
+
+    @Column(name = "appt_doctor_specialization")
+    private String apptDoctorSpecialization;
+
     @Column(name = "created_at")
     @UpdateTimestamp
     private LocalDateTime createdAt;
@@ -33,4 +45,13 @@ public class NotificationEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "appointment_id", nullable = false)
     private AppointmentEntity appointment;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "appt_doctor_id", nullable = false)
+    private DoctorEntity doctor;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "appt_users_id", nullable = false)
+    private UserEntity users;
+
 }

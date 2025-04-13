@@ -31,4 +31,9 @@ public class NotificationPersistenceAdapter implements NotificationPersistencePo
     public List<NotificationEntity> findByAppointmentPatientId(Long patientId) {
         return notificationRepository.findByAppointment_Patient_Id(patientId);
     }
+
+    @Override
+    public List<NotificationEntity> findByUserId(Long userId) {
+        return notificationRepository.findByUsers_Id(userId);
+    }
 }

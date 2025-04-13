@@ -11,5 +11,5 @@ public interface NotificationPersistencePort {
 
     Optional<NotificationEntity> findByAppointmentId(Long appointmentId);
 
-    List<NotificationEntity> findByAppointmentPatientId(Long patientId);
+    List<NotificationEntity> findByUserId(Long userId);
 }

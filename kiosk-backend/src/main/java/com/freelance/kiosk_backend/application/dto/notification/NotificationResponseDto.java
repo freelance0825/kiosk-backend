@@ -1,6 +1,5 @@
 package com.freelance.kiosk_backend.application.dto.notification;
 
-import com.freelance.kiosk_backend.application.dto.appointment.AppointmentResponseDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,7 +17,20 @@ public class NotificationResponseDto {
 
     private Boolean isCancelled;
 
+    private Long appointmentId;
+
+    private Long appDoctorId;
+
+    private Long appUserId;
+
+    private String apptUserName;
+
+    private String apptDoctorName;
+
+    private String apptDoctorSpecialization;
+
+    private LocalDateTime apptDateTime;
+
     private LocalDateTime createAt;
 
-    AppointmentResponseDto appointment;
 }
