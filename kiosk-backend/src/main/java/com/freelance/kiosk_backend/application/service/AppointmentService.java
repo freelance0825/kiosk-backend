@@ -4,21 +4,16 @@ import com.freelance.kiosk_backend.application.dto.appointment.AppointmentReques
 import com.freelance.kiosk_backend.application.dto.appointment.AppointmentResponseDto;
 import com.freelance.kiosk_backend.application.dto.appointment.PostConsultationForAppointmentDto;
 import com.freelance.kiosk_backend.application.dto.medicine.MedicineDto;
-import com.freelance.kiosk_backend.domain.entity.AppointmentEntity;
-import com.freelance.kiosk_backend.domain.entity.DoctorEntity;
-import com.freelance.kiosk_backend.domain.entity.PrescriptionEntity;
-import com.freelance.kiosk_backend.domain.entity.UserEntity;
+import com.freelance.kiosk_backend.domain.entity.*;
 import com.freelance.kiosk_backend.domain.mapper.AppointmentMapper;
-import com.freelance.kiosk_backend.infrastructure.port.AppointmentPersistencePort;
-import com.freelance.kiosk_backend.infrastructure.port.DoctorPersistencePort;
-import com.freelance.kiosk_backend.infrastructure.port.PrescriptionPersistencePort;
-import com.freelance.kiosk_backend.infrastructure.port.UserPersistencePort;
+import com.freelance.kiosk_backend.infrastructure.port.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,6 +25,8 @@ public class AppointmentService {
     private final AppointmentPersistencePort appointmentPersistencePort;
 
     private final PrescriptionPersistencePort prescriptionPersistencePort;
+
+    private final NotificationPersistencePort notificationPersistencePort;
 
     private final AppointmentMapper appointmentMapper;
 
@@ -49,6 +46,15 @@ public class AppointmentService {
         try {
             AppointmentEntity appointment = createAppointment(appointmentDto, doctor, patient);
             AppointmentEntity saved = appointmentPersistencePort.save(appointment);
+
+            // Create and save a notification as BOOKED
+            NotificationEntity notification = new NotificationEntity();
+            notification.setAppointment(saved);
+            notification.setIsBooked(true);
+            notification.setIsRescheduled(false);
+            notification.setIsCancelled(false);
+            notificationPersistencePort.save(notification);
+
             return appointmentMapper.toDto(saved);
         } catch (Exception e) {
             log.error("Failed to save appointment", e);
@@ -62,12 +68,30 @@ public class AppointmentService {
             AppointmentEntity existingAppointment = appointmentPersistencePort.findById(id)
                     .orElseThrow(() -> new IOException("Appointment not found for ID: " + id));
 
-            // Update fields only if present in the request
+            // Save the old datetime for comparison
+            LocalDateTime oldDateTime = existingAppointment.getDateTime();
+
+            // Update appointment fields
             appointmentMapper.updateAppointmentFromDto(appointmentDto, existingAppointment);
 
-            // Save the updated appointment entity
+            // Save updated appointment
             AppointmentEntity updatedAppointment = appointmentPersistencePort.save(existingAppointment);
             log.info("Successfully updated appointment: {}", updatedAppointment.getName());
+
+            boolean isRescheduled = oldDateTime != null && !oldDateTime.equals(updatedAppointment.getDateTime());
+
+            if (isRescheduled) {
+                NotificationEntity notification = notificationPersistencePort.findByAppointmentId(id).
+                        orElseThrow(() -> new IllegalArgumentException("Notification not found for appointment ID: " + id));
+
+                // Update notification flags
+                notification.setIsBooked(false);
+                notification.setIsRescheduled(true);
+                notification.setIsCancelled(false);
+
+                notificationPersistencePort.save(notification);
+                log.info("Notification for appointment ID {} marked as rescheduled", id);
+            }
 
             return appointmentMapper.toDto(updatedAppointment);
 
@@ -89,48 +113,59 @@ public class AppointmentService {
         return responseDto;
     }
 
-
-    // Fetch appointments by patient ID
     public List<AppointmentResponseDto> getAppointmentsByPatientId(Long patientId) {
-        List<AppointmentEntity> appointmentList = appointmentPersistencePort.findByPatientIdWithPostConsultation(patientId);
-        List<AppointmentResponseDto> responseDtos = appointmentMapper.toDtoList(appointmentList);
+        List<AppointmentEntity> appointmentList = appointmentPersistencePort.findByPatientId(patientId);
+        List<AppointmentResponseDto> responseList = appointmentMapper.toDtoList(appointmentList);
 
-        // Manually populate the medicines for each postConsultation in the response
-        for (AppointmentResponseDto dto : responseDtos) {
+        for (AppointmentResponseDto dto : responseList) {
             if (dto.getPostConsultation() != null) {
                 populateMedicines(dto.getPostConsultation());
             }
         }
 
-        return responseDtos;
+        return responseList;
     }
 
     public List<AppointmentResponseDto> getAppointmentsByDoctorId(Long doctorId) {
         List<AppointmentEntity> appointmentList = appointmentPersistencePort.findByDoctorId(doctorId);
-        List<AppointmentResponseDto> responseDtos =  appointmentMapper.toDtoList(appointmentList);
-        // Manually populate the medicines for each postConsultation in the response
-        for (AppointmentResponseDto dto : responseDtos) {
+        List<AppointmentResponseDto> responseList = appointmentMapper.toDtoList(appointmentList);
+
+        for (AppointmentResponseDto dto : responseList) {
             if (dto.getPostConsultation() != null) {
                 populateMedicines(dto.getPostConsultation());
             }
         }
 
-        return responseDtos;
+        return responseList;
     }
 
     @Transactional
     public void deleteAppointment(Long id) throws IOException {
         log.info("Deleting appointment with ID: {}", id);
         try {
-            AppointmentEntity existingAppointment = appointmentPersistencePort.findById(id).orElse(null);
-            if (appointmentPersistencePort.existsById(id)) {
-                appointmentPersistencePort.deleteById(id);
+            AppointmentEntity existingAppointment = appointmentPersistencePort.findById(id)
+                    .orElseThrow(() -> new IOException("Appointment not found for ID: " + id));
+
+            // Fetch the notification related to this appointment (if it exists)
+            NotificationEntity notification = notificationPersistencePort.findByAppointmentId(id).
+                    orElseThrow(() -> new IllegalArgumentException("Notification not found for appointment ID: " + id));
+
+            // If notification exists, mark it as cancelled
+            if (notification != null) {
+                notification.setIsBooked(false);
+                notification.setIsRescheduled(false);
+                notification.setIsCancelled(true);
+
+                notificationPersistencePort.save(notification);
             }
 
-            log.info("Appointment with ID: {} has been deleted successfully", id);
+            // Now delete the appointment
+            appointmentPersistencePort.deleteById(id);
+
+            log.info("Appointment with ID: {} has been deleted successfully");
         } catch (Exception e) {
-            log.error("Error deleting appointment with ID: {}: {}", id, e.getMessage());
-            throw new IOException("Error deleting appointment: " + e.getMessage());
+            log.error("Error deleting appointment with ID: {}", id, e.getMessage());
+            throw new IOException(e.getMessage());
         }
     }
 
@@ -151,7 +186,6 @@ public class AppointmentService {
 
     // Manually populate medicines from PrescriptionEntity for each PostConsultation
     private void populateMedicines(PostConsultationForAppointmentDto postConsultation) {
-        // Assuming PostConsultationEntity has a list of prescriptions
         if (postConsultation != null && postConsultation.getId() != null) {
             // Fetch the prescriptions related to the current postConsultation
             List<PrescriptionEntity> prescriptions = prescriptionPersistencePort.findByPostConsultationId(postConsultation.getId());

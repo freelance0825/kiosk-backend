@@ -30,7 +30,4 @@ public interface AppointmentMapper {
 
     MedicineDto toMedicineDto(PrescriptionEntity prescriptionEntity);
 
-
-
-
 }

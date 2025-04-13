@@ -4,7 +4,7 @@ CREATE TABLE appointment (
     patient_id BIGINT NOT NULL,
     consult_id BIGINT,
     image_base64 TEXT,
-    date_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    date_time TIMESTAMP,
     name VARCHAR(255),
     specialization VARCHAR(255),
     health_complaints TEXT,
