@@ -26,7 +26,7 @@ public class NotificationPersistenceAdapter implements NotificationPersistencePo
     public Optional<NotificationEntity> findByAppointmentId(Long appointmentId) {
         return notificationRepository.findByAppointmentId(appointmentId);
     }
-git
+
     @Override
     public List<NotificationEntity> findByUserId(Long userId) {
         return notificationRepository.findByUsers_Id(userId);
