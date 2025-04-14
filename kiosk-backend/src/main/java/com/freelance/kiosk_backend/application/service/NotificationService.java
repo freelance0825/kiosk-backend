@@ -31,24 +31,7 @@ public class NotificationService {
     private List<NotificationResponseDto> buildResponse(List<NotificationEntity> notificationList) {
         return notificationList.stream()
                 .sorted(Comparator.comparing(NotificationEntity::getCreatedAt).reversed())
-                .map(entity -> {
-                    NotificationResponseDto response = notificationMapper.toDto(entity);
-                    setIds(response, entity);
-                    return response;
-                })
+                .map(notificationMapper::toDto)
                 .collect(Collectors.toList());
-    }
-
-    // Helper method to manually set the 3 IDs
-    private void setIds(NotificationResponseDto dto, NotificationEntity entity) {
-        if (entity.getAppointment() != null) {
-            dto.setAppointmentId(entity.getAppointment().getId());
-        }
-        if (entity.getDoctor() != null) {
-            dto.setApptDoctorId(entity.getDoctor().getId());
-        }
-        if (entity.getUsers() != null) {
-            dto.setApptUserId(entity.getUsers().getId());
-        }
     }
 }
