@@ -19,9 +19,9 @@ public class NotificationResponseDto {
 
     private Long appointmentId;
 
-    private Long appDoctorId;
+    private Long apptDoctorId;
 
-    private Long appUserId;
+    private Long apptUserId;
 
     private String apptUserName;
 
@@ -31,6 +31,6 @@ public class NotificationResponseDto {
 
     private LocalDateTime apptDateTime;
 
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 
 }
