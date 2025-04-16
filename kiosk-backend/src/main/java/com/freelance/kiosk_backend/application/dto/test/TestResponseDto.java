@@ -5,11 +5,13 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class TestDto {
+public class TestResponseDto {
 
     private Long id;
 
     private String name;
 
-    private String icon;
+    private Double result;
+
+    private String range;
 }

@@ -22,7 +22,6 @@ public class LoginController {
 
     private final UserService userService;
 
-    // Login endpoint that accepts phone number in the request body
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
     public UserResponseDto login(@RequestBody @Validated UserLoginRequestDto loginRequest) {
         log.info("Received login request with phone number: {}", loginRequest.getPhoneNumber());

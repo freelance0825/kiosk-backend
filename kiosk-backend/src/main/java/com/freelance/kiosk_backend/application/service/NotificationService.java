@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,9 +28,11 @@ public class NotificationService {
     }
 
     private List<NotificationResponseDto> buildResponse(List<NotificationEntity> notificationList) {
-        return notificationList.stream()
+        List<NotificationResponseDto> dtoList = notificationList.stream()
                 .sorted(Comparator.comparing(NotificationEntity::getCreatedAt).reversed())
                 .map(notificationMapper::toDto)
-                .collect(Collectors.toList());
+                .toList();
+
+        return dtoList;
     }
 }

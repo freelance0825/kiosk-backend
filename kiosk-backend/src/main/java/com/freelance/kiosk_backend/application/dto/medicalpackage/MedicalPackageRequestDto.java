@@ -1,6 +1,6 @@
 package com.freelance.kiosk_backend.application.dto.medicalpackage;
 
-import com.freelance.kiosk_backend.application.dto.test.TestDto;
+import com.freelance.kiosk_backend.application.dto.test.TestResponseDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,7 +12,7 @@ public class MedicalPackageRequestDto {
 
     private String name;
 
-    private String imageBase64;
+    private Long patientId;
 
-    private List<TestDto> tests; // List of tests
+    private List<TestResponseDto> tests;
 }
