@@ -3,7 +3,7 @@ package com.freelance.kiosk_backend.application.dto.notification;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Getter
 @Setter
@@ -29,8 +29,8 @@ public class NotificationResponseDto {
 
     private String apptDoctorSpecialization;
 
-    private LocalDateTime apptDateTime;
+    private OffsetDateTime apptDateTime;
 
-    private LocalDateTime createdAt;
+    private OffsetDateTime createdAt;
 
 }

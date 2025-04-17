@@ -1,7 +1,6 @@
 package com.freelance.kiosk_backend.api.controller;
 
-import com.freelance.kiosk_backend.application.dto.appointment.AppointmentRequestDto;
-import com.freelance.kiosk_backend.application.dto.appointment.AppointmentResponseDto;
+import com.freelance.kiosk_backend.application.dto.appointment.*;
 import com.freelance.kiosk_backend.application.service.AppointmentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +9,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -22,27 +20,25 @@ public class AppointmentController {
     private final AppointmentService appointmentService;
 
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AppointmentResponseDto> createAppointment(@RequestBody AppointmentRequestDto appointmentDto,
-                                                                    @RequestParam Long currentPatient,
-                                                                    @RequestParam Long chosenDoctor) {
+    public ResponseEntity<AppointmentResponseDto> createAppointment(@RequestBody AppointmentRequestDto appointmentDto) {
+        AppointmentResponseDto savedAppointment = appointmentService.createAppointment(appointmentDto);
+        log.info("Appointment created successfully: {}", savedAppointment);
 
-        try {
-            AppointmentResponseDto savedAppointment = appointmentService.saveAppointmentWithImage(appointmentDto,
-                    currentPatient, chosenDoctor);
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedAppointment);
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
+        return ResponseEntity.ok(savedAppointment);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AppointmentResponseDto> updateAppointment(@PathVariable Long id, @RequestBody AppointmentRequestDto appointmentDto) {
-        try {
-            AppointmentResponseDto updatedAppointment = appointmentService.updateAppointment(id, appointmentDto);
-            return ResponseEntity.ok(updatedAppointment);
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
+    public ResponseEntity<AppointmentResponseDto> updateAppointment(@PathVariable Long id,
+                                                                    @RequestBody UpdateAppointmentRequestDto updatedAppointment) {
+        AppointmentResponseDto response = appointmentService.updateAppointment(id, updatedAppointment);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteAppointment(@PathVariable Long id) {
+        appointmentService.deleteAppointment(id);
+        log.info("Appointment with ID: {} has been deleted successfully.", id);
+        return ResponseEntity.ok("Appointment with ID: " + id + " has been deleted successfully.");
     }
 
     @GetMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -75,21 +71,20 @@ public class AppointmentController {
         }
     }
 
-    @DeleteMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> deleteAppointment(@PathVariable Long id) {
-        try {
-            appointmentService.deleteAppointment(id);
-            return ResponseEntity.ok("Appointment with ID: " + id + " has been deleted successfully.");
-        } catch (IOException e) {
-            return ResponseEntity.status(500).body("Error deleting appointment: " + e.getMessage());
-        }
-    }
-
     // Get all appointments
     @GetMapping(value = "/list", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<AppointmentResponseDto>> getAllAppointments() {
         List<AppointmentResponseDto> appointments = appointmentService.getAllAppointments();
         return ResponseEntity.ok(appointments);
     }
+
+    @GetMapping(value = "/timeslots/{doctorId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<AvailableTimeslotResponseDto> getAvailableTimeSlots(@PathVariable Long doctorId,
+                                                                              @ModelAttribute AvailableTimeslotRequestDto request) {
+
+        AvailableTimeslotResponseDto response = appointmentService.getAvailableTimeSlotsForDay(doctorId, request);
+        return ResponseEntity.ok(response);
+    }
+
 
 }

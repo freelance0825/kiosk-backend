@@ -3,7 +3,7 @@ CREATE TABLE post_consultation (
     doctor_id BIGINT NOT NULL,
     patient_id BIGINT NOT NULL,
     appointment_id BIGINT NOT NULL,
-    date_time TIMESTAMP,
+    date_time TIMESTAMPTZ,
     diagnosis TEXT,
     suggestions TEXT,
     follow_up_date VARCHAR(255),

@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Entity
 @Getter
@@ -32,11 +32,11 @@ public class AppointmentEntity {
     private String imageBase64;
 
     @Column(name = "date_time",nullable = false)
-    private LocalDateTime dateTime;
+    private OffsetDateTime dateTime;
 
     private String name;
 
     private String specialization;
 
-    private String healthComplaints; // Optional description of the appointment's purpose
+    private String healthComplaints;
 }

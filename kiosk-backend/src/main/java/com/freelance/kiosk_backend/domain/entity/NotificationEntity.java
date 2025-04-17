@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Entity
 @Getter
@@ -27,7 +27,7 @@ public class NotificationEntity {
     private Boolean isCancelled = false;
 
     @Column(name = "appt_date_time")
-    private LocalDateTime apptDateTime;
+    private OffsetDateTime apptDateTime;
 
     @Column(name = "appt_users_name")
     private String apptUserName;
@@ -40,7 +40,7 @@ public class NotificationEntity {
 
     @Column(name = "created_at")
     @UpdateTimestamp
-    private LocalDateTime createdAt;
+    private OffsetDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "appointment_id", nullable = false)

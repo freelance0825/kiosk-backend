@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,11 +39,6 @@ public class AppointmentPersistenceAdapter implements AppointmentPersistencePort
     }
 
     @Override
-    public boolean existsById(Long id) {
-        return appointmentRepository.existsById(id);
-    }
-
-    @Override
     public void deleteById(Long id) {
         appointmentRepository.deleteById(id);
     }
@@ -50,6 +46,11 @@ public class AppointmentPersistenceAdapter implements AppointmentPersistencePort
     @Override
     public List<AppointmentEntity> findAll() {
         return appointmentRepository.findAll();
+    }
+
+    @Override
+    public boolean existsByDateTimeAndDoctorId(OffsetDateTime dateTime, Long doctorId) {
+        return appointmentRepository.existsByDateTimeAndDoctorId(dateTime, doctorId);
     }
 
 }

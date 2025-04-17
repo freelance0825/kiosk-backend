@@ -6,11 +6,11 @@ CREATE TABLE notification (
     is_booked BOOLEAN DEFAULT FALSE,
     is_rescheduled BOOLEAN DEFAULT FALSE,
     is_cancelled BOOLEAN DEFAULT FALSE,
-    appt_date_time TIMESTAMP,
+    appt_date_time TIMESTAMPTZ,
     appt_users_name VARCHAR(255),
     appt_doctor_name VARCHAR(255),
     appt_doctor_specialization VARCHAR(255),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
 
     FOREIGN KEY (appointment_id) REFERENCES appointment(id) ON DELETE SET NULL,
     FOREIGN KEY (appt_users_id) REFERENCES users(id) ON DELETE SET NULL,

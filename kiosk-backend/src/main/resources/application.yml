@@ -6,7 +6,7 @@ spring:
     name: kiosk-backend
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/kiosk_db2
+    url: jdbc:postgresql://localhost:5432/kiosk_db
     username: postgres
     password: root
     driver-class-name: org.postgresql.Driver

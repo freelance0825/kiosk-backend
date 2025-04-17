@@ -4,9 +4,8 @@ import com.freelance.kiosk_backend.application.dto.medicine.MedicineDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Entity
@@ -37,7 +36,7 @@ public class PostConsultationEntity {
     private List<MedicineDto> medicines;
 
     @Column(name = "date_time",nullable = false)
-    private LocalDateTime dateTime;
+    private OffsetDateTime dateTime;
 
     private String diagnosis;
 

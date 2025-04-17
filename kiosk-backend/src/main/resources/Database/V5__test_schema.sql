@@ -5,8 +5,8 @@ CREATE TABLE test (
     medical_package_id BIGINT,
     name VARCHAR(255),
     result TEXT,
-    range VARCHAR (255),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    range VARCHAR(255),
+    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
 
     FOREIGN KEY (patient_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (custom_package_id) REFERENCES custom_package(id) ON DELETE CASCADE,

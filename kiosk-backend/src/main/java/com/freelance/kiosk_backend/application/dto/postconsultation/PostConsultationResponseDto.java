@@ -1,6 +1,5 @@
 package com.freelance.kiosk_backend.application.dto.postconsultation;
 
-import com.freelance.kiosk_backend.application.dto.appointment.AppointmentResponseDto;
 import com.freelance.kiosk_backend.application.dto.doctor.DoctorResponseDto;
 import com.freelance.kiosk_backend.application.dto.medicine.AppointmentDto;
 import com.freelance.kiosk_backend.application.dto.medicine.MedicineDto;
@@ -8,7 +7,7 @@ import com.freelance.kiosk_backend.application.dto.user.UserResponseDto;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Getter
@@ -27,7 +26,7 @@ public class PostConsultationResponseDto {
 
     private List<MedicineDto> medicines; // List of prescriptions with medicines
 
-    private LocalDateTime dateTime;
+    private OffsetDateTime dateTime;
 
     private String diagnosis;
 
