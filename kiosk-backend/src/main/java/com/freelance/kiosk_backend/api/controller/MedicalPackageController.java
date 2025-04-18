@@ -48,4 +48,11 @@ public class MedicalPackageController {
         log.info("Fetched medical tests for patientId {}: {}", patientId, dtoList);
         return ResponseEntity.ok(dtoList);
     }
+
+    @GetMapping(value = "medical/package",produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<MedicalPackageResponseDto> getAllMedicalPackages() {
+        log.info("Fetched all medical packages.");
+        return medicalPackageService.getAllMedicalPackages();
+    }
+
 }

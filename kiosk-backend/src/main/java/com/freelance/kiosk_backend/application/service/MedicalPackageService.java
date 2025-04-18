@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -72,4 +73,22 @@ public class MedicalPackageService {
         log.info("Medical package created successfully with ID: {}", savedPackage.getId());
         return responseDto;
     }
+
+    public List<MedicalPackageResponseDto> getAllMedicalPackages() {
+        List<MedicalPackageEntity> mpList = medicalPackagePersistencePort.findAll();
+        List<MedicalPackageResponseDto> response = new ArrayList<>();
+
+        for (MedicalPackageEntity medicalPackage : mpList) {
+            MedicalPackageResponseDto dto = medicalPackageMapper.toDto(medicalPackage);
+
+            List<TestEntity> tests = testPersistencePort.findByMedicalPackageId(medicalPackage.getId());
+            List<TestResponseDto> testDtos = testMapper.toDtoList(tests);
+
+            dto.setTests(testDtos);
+            response.add(dto);
+        }
+
+        return response;
+    }
+
 }

@@ -11,6 +11,8 @@ public interface TestRepository extends JpaRepository<TestEntity, Long> {
 
     List<TestEntity> findByUsers_Id(Long patientId);
 
+    List<TestEntity> findByMedicalPackage_Id(Long medicalPackageId);
+
 }
 
 

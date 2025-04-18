@@ -12,6 +12,8 @@ public class MedicalPackageResponseDto {
 
     private Long id;
 
+    private String name;
+
     private String patientId;
 
     private List<TestResponseDto> tests;

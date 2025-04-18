@@ -9,4 +9,6 @@ public interface TestPersistencePort {
     TestEntity save(TestEntity testEntity);
 
     List<TestEntity> findByPatientId(Long patientId);
+
+    List<TestEntity> findByMedicalPackageId(Long medicalPackageId);
 }

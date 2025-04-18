@@ -1,6 +1,5 @@
 package com.freelance.kiosk_backend.infrastructure.adapter.internal;
 
-import com.freelance.kiosk_backend.domain.entity.AppointmentEntity;
 import com.freelance.kiosk_backend.domain.entity.TestEntity;
 import com.freelance.kiosk_backend.domain.repository.TestRepository;
 import com.freelance.kiosk_backend.infrastructure.port.TestPersistencePort;
@@ -25,5 +24,10 @@ public class TestPersistenceAdapter implements TestPersistencePort {
     @Override
     public List<TestEntity> findByPatientId(Long patientId) {
         return testRepository.findByUsers_Id(patientId);
+    }
+
+    @Override
+    public List<TestEntity> findByMedicalPackageId(Long medicalPackageId) {
+        return testRepository.findByMedicalPackage_Id(medicalPackageId);
     }
 }
