@@ -9,6 +9,9 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface TestHistoryMapper {
 
+    // Maps a single TestHistoryEntity to TestHistoryResponseDto
+    TestHistoryResponseDto toDto(TestHistoryEntity entity);
+
     List<TestHistoryResponseDto> toDtoList (List<TestHistoryEntity> testEntities);
 
 }
