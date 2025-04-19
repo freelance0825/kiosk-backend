@@ -54,13 +54,13 @@ public class MedicalPackageHistoryService {
 
         List<TestHistoryEntity> savedTestEntities = request.getTests()
                 .stream()
-                .map(testDto -> {
+                .map(testHistoryDto -> {
                     TestHistoryEntity testHistoryEntity = new TestHistoryEntity();
                     testHistoryEntity.setUsers(patient);
                     testHistoryEntity.setMedicalPackage(savedPackage);
-                    testHistoryEntity.setName(testDto.getName());
-                    testHistoryEntity.setResult(String.valueOf(testDto.getResult()));
-                    testHistoryEntity.setRange(TestRange.valueOf(testDto.getRange()));
+                    testHistoryEntity.setName(testHistoryDto.getName());
+                    testHistoryEntity.setResult(testHistoryDto.getResult());
+                    testHistoryEntity.setRange(TestRange.valueOf(testHistoryDto.getRange()));
                     return testHistoryEntity;
                 })
                 .map(testHistoryPersistencePort::save)

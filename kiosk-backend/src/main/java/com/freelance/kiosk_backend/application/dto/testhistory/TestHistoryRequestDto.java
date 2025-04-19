@@ -9,7 +9,7 @@ public class TestHistoryRequestDto {
 
     private String name;
 
-    private Double result;
+    private String result;
 
     private String range;
 

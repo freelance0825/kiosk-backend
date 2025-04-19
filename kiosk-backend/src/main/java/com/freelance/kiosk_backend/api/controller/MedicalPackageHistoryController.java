@@ -42,7 +42,7 @@ public class MedicalPackageHistoryController {
         return ResponseEntity.ok(customPackage);
     }
 
-    @GetMapping(value = "/{patientId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/test/history/{patientId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<MedicalTestHistoryResponseDto>> getMedicalTestHistoryByPatientId(@PathVariable Long patientId) {
         List<MedicalTestHistoryResponseDto> dtoList = medicalTestService.getMedicalTestHistoryByPatientId(patientId);
         log.info("Fetched medical tests for patientId {}: {}", patientId, dtoList);

@@ -11,7 +11,7 @@ public class TestHistoryResponseDto {
 
     private String name;
 
-    private Double result;
+    private String result;
 
     private String range;
 }
