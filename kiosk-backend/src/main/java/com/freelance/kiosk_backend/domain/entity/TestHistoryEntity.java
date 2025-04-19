@@ -1,6 +1,6 @@
 package com.freelance.kiosk_backend.domain.entity;
 
-import com.freelance.kiosk_backend.application.dto.test.enums.TestRange;
+import com.freelance.kiosk_backend.application.dto.testhistory.enums.TestRange;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,8 +11,8 @@ import java.time.OffsetDateTime;
 @Entity
 @Getter
 @Setter
-@Table(name = "test")
-public class TestEntity {
+@Table(name = "test_history")
+public class TestHistoryEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,12 +23,12 @@ public class TestEntity {
     private UserEntity users;
 
     @ManyToOne
-    @JoinColumn(name = "custom_package_id")
-    private CustomPackageEntity customPackage;
+    @JoinColumn(name = "custom_package_history_id")
+    private CustomPackageHistoryEntity customPackage;
 
     @ManyToOne
-    @JoinColumn(name = "medical_package_id")
-    private MedicalPackageEntity medicalPackage;
+    @JoinColumn(name = "medical_package_history_id")
+    private MedicalPackageHistoryEntity medicalPackage;
 
     private String name;
 

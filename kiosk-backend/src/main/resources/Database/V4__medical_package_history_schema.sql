@@ -1,4 +1,4 @@
-CREATE TABLE medical_package (
+CREATE TABLE medical_package_history (
     id SERIAL PRIMARY KEY,
     patient_id BIGINT NOT NULL,
     name VARCHAR(255),

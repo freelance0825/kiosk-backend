@@ -1,4 +1,4 @@
-package com.freelance.kiosk_backend.application.dto.test.enums;
+package com.freelance.kiosk_backend.application.dto.testhistory.enums;
 
 public enum TestCustomName {
 

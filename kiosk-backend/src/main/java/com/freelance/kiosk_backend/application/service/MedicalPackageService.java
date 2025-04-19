@@ -2,26 +2,16 @@ package com.freelance.kiosk_backend.application.service;
 
 import com.freelance.kiosk_backend.application.dto.medicalpackage.MedicalPackageRequestDto;
 import com.freelance.kiosk_backend.application.dto.medicalpackage.MedicalPackageResponseDto;
-import com.freelance.kiosk_backend.application.dto.test.TestResponseDto;
-import com.freelance.kiosk_backend.application.dto.test.enums.TestMedicalName;
-import com.freelance.kiosk_backend.application.dto.test.enums.TestRange;
 import com.freelance.kiosk_backend.domain.entity.MedicalPackageEntity;
-import com.freelance.kiosk_backend.domain.entity.TestEntity;
-import com.freelance.kiosk_backend.domain.entity.UserEntity;
 import com.freelance.kiosk_backend.domain.mapper.MedicalPackageMapper;
-import com.freelance.kiosk_backend.domain.mapper.TestMapper;
 import com.freelance.kiosk_backend.infrastructure.port.MedicalPackagePersistencePort;
-import com.freelance.kiosk_backend.infrastructure.port.TestPersistencePort;
-import com.freelance.kiosk_backend.infrastructure.port.UserPersistencePort;
-import com.freelance.kiosk_backend.shared.exception.InvalidRequestException;
-import com.freelance.kiosk_backend.shared.exception.PatientNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,63 +22,34 @@ public class MedicalPackageService {
 
     private final MedicalPackageMapper medicalPackageMapper;
 
-    private final UserPersistencePort userPersistencePort;
+    public MedicalPackageResponseDto createPackage(MedicalPackageRequestDto request) throws IOException {
+        try {
+            log.info("Creating a new medical package with name: {}", request.getName());
+            log.info("Streams initial: {}", request.getTests());
 
-    private final TestPersistencePort testPersistencePort;
+            MedicalPackageEntity medicalPackage = new MedicalPackageEntity();
+            medicalPackage.setName(request.getName());
+            medicalPackage.setIcon(request.getImageBase64());
 
-    private final TestMapper testMapper;
+            String testsString = request.getTests().stream()
+                    .map(test -> String.format("[{name=%s, icon='%s'}]", test.getName(), test.getIcon()))
+                    .collect(Collectors.joining(", "));
 
-    public MedicalPackageResponseDto createMedicalPackage(MedicalPackageRequestDto request) {
-        if (ObjectUtils.isEmpty(request))
-            throw new InvalidRequestException("Request must not be null or empty");
+            medicalPackage.setTests(testsString);
 
-        UserEntity patient = userPersistencePort.findById(request.getPatientId())
-                .orElseThrow(() -> new PatientNotFoundException("Patient not found"));
-
-        log.info("Creating a new custom package with name: {}", request.getName());
-
-        MedicalPackageEntity medicalPackage = new MedicalPackageEntity();
-        medicalPackage.setPatient(patient);
-        medicalPackage.setName(TestMedicalName.valueOf(request.getName()));
-        MedicalPackageEntity savedPackage = medicalPackagePersistencePort.save(medicalPackage);
-
-        List<TestEntity> savedTestEntities = request.getTests()
-                .stream()
-                .map(testDto -> {
-                    TestEntity testEntity = new TestEntity();
-                    testEntity.setUsers(patient);
-                    testEntity.setMedicalPackage(savedPackage);
-                    testEntity.setName(testDto.getName());
-                    testEntity.setResult(String.valueOf(testDto.getResult()));
-                    testEntity.setRange(TestRange.valueOf(testDto.getRange()));
-                    return testEntity;
-                })
-                .map(testPersistencePort::save)
-                .toList();
-
-        List<TestResponseDto> testResponseDtos = testMapper.toDtoList(savedTestEntities);
-        MedicalPackageResponseDto responseDto = medicalPackageMapper.toDto(savedPackage);
-        responseDto.setTests(testResponseDtos);
-
-        log.info("Medical package created successfully with ID: {}", savedPackage.getId());
-        return responseDto;
+            MedicalPackageEntity savedEntity = medicalPackagePersistencePort.save(medicalPackage);
+            MedicalPackageResponseDto responseDto = medicalPackageMapper.toDto(savedEntity);
+            log.info("Medical package created successfully with ID: {}", responseDto.getId());
+            return responseDto;
+        } catch (Exception e) {
+            log.error("Unexpected error occurred: {}", e.getMessage(), e);
+            throw new RuntimeException("Unexpected error occurred while creating medical package", e);
+        }
     }
 
     public List<MedicalPackageResponseDto> getAllMedicalPackages() {
         List<MedicalPackageEntity> mpList = medicalPackagePersistencePort.findAll();
-        List<MedicalPackageResponseDto> response = new ArrayList<>();
-
-        for (MedicalPackageEntity medicalPackage : mpList) {
-            MedicalPackageResponseDto dto = medicalPackageMapper.toDto(medicalPackage);
-
-            List<TestEntity> tests = testPersistencePort.findByMedicalPackageId(medicalPackage.getId());
-            List<TestResponseDto> testDtos = testMapper.toDtoList(tests);
-
-            dto.setTests(testDtos);
-            response.add(dto);
-        }
-
-        return response;
+        return medicalPackageMapper.toDtoList(mpList);
     }
 
 }

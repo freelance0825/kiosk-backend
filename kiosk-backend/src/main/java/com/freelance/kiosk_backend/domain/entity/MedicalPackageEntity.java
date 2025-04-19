@@ -1,12 +1,8 @@
 package com.freelance.kiosk_backend.domain.entity;
 
-import com.freelance.kiosk_backend.application.dto.test.enums.TestMedicalName;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
-
-import java.time.OffsetDateTime;
 
 @Entity
 @Getter
@@ -18,14 +14,11 @@ public class MedicalPackageEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "patient_id", nullable = false)
-    private UserEntity patient;
+    private String name;
 
-    @Enumerated(EnumType.STRING)
-    private TestMedicalName name;
+    @Column(columnDefinition = "TEXT")
+    private String icon;
 
-    @Column(name = "created_at" ,nullable = false)
-    @CreationTimestamp
-    private OffsetDateTime createdAt;
+    @Column(columnDefinition = "TEXT")
+    private String tests;
 }

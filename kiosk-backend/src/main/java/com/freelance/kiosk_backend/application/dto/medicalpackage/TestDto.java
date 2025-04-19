@@ -5,14 +5,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class MedicalPackageResponseDto {
+public class TestDto {
 
     private Long id;
 
     private String name;
 
     private String icon;
-
-    private String tests;
 }
 

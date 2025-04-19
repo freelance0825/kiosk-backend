@@ -1,9 +1,9 @@
 package com.freelance.kiosk_backend.application.service;
 
-import com.freelance.kiosk_backend.application.dto.test.MedicalTestResponseDto;
-import com.freelance.kiosk_backend.domain.entity.TestEntity;
+import com.freelance.kiosk_backend.application.dto.testhistory.MedicalTestHistoryResponseDto;
+import com.freelance.kiosk_backend.domain.entity.TestHistoryEntity;
 import com.freelance.kiosk_backend.domain.mapper.MedicalTestMapper;
-import com.freelance.kiosk_backend.infrastructure.port.TestPersistencePort;
+import com.freelance.kiosk_backend.infrastructure.port.TestHistoryPersistencePort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,15 +16,15 @@ import java.util.List;
 @Slf4j
 public class MedicalTestService {
 
-    private final TestPersistencePort testPersistencePort;
+    private final TestHistoryPersistencePort testHistoryPersistencePort;
 
     private final MedicalTestMapper medicalTestMapper;
 
-    public List<MedicalTestResponseDto> getMedicalTestByPatientId(Long patientId) {
-        List<TestEntity> testEntities = testPersistencePort.findByPatientId(patientId);
+    public List<MedicalTestHistoryResponseDto> getMedicalTestHistoryByPatientId(Long patientId) {
+        List<TestHistoryEntity> testEntities = testHistoryPersistencePort.findByPatientId(patientId);
 
-        List<MedicalTestResponseDto> dtoList = testEntities.stream()
-                .sorted(Comparator.comparing(TestEntity::getCreatedAt).reversed())
+        List<MedicalTestHistoryResponseDto> dtoList = testEntities.stream()
+                .sorted(Comparator.comparing(TestHistoryEntity::getCreatedAt).reversed())
                 .map(medicalTestMapper::toDto)
                 .toList();
 

@@ -1,4 +1,4 @@
-package com.freelance.kiosk_backend.application.dto.test;
+package com.freelance.kiosk_backend.application.dto.testhistory;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,7 +7,7 @@ import java.time.OffsetDateTime;
 
 @Getter
 @Setter
-public class MedicalTestResponseDto {
+public class MedicalTestHistoryResponseDto {
 
     private Long userId;
 
@@ -25,7 +25,7 @@ public class MedicalTestResponseDto {
 
     private String userPhoneNumber;
 
-    private TestResponseDto tests;
+    private TestHistoryResponseDto tests;
 
     private OffsetDateTime createdAt;
 

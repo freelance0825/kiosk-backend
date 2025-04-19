@@ -1,6 +1,6 @@
 package com.freelance.kiosk_backend.domain.entity;
 
-import com.freelance.kiosk_backend.application.dto.test.enums.TestCustomName;
+import com.freelance.kiosk_backend.application.dto.testhistory.enums.TestCustomName;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,8 +11,8 @@ import java.time.OffsetDateTime;
 @Entity
 @Getter
 @Setter
-@Table(name="custom_package")
-public class CustomPackageEntity {
+@Table(name="custom_package_history")
+public class CustomPackageHistoryEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
