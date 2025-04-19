@@ -14,5 +14,7 @@ public class MedicalPackageHistoryRequestDto {
 
     private Long patientId;
 
+    private Boolean isGeneralTest;
+
     private List<TestHistoryResponseDto> tests;
 }

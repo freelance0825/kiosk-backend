@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -26,7 +27,7 @@ public class MedicalTestHistoryResponseDto {
 
     private String userPhoneNumber;
 
-    private TestHistoryResponseDto tests;
+    private List<TestHistoryResponseDto> tests;
 
     @JsonFormat(pattern = "d MMMM yyyy, HH:mm", shape = JsonFormat.Shape.STRING)
     private OffsetDateTime createdAt;

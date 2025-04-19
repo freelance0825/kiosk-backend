@@ -14,6 +14,8 @@ public class CustomPackageHistoryRequestDto {
 
     private Long patientId;
 
+    private Boolean isGeneralTest;
+
     private List<TestHistoryRequestDto> tests;
 
 }

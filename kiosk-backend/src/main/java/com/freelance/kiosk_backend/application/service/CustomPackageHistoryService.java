@@ -50,6 +50,7 @@ public class CustomPackageHistoryService {
         CustomPackageHistoryEntity customPackage = new CustomPackageHistoryEntity();
         customPackage.setPatient(patient);
         customPackage.setName(TestCustomName.valueOf(request.getName()));
+        customPackage.setIsGeneralTest(request.getIsGeneralTest());
         CustomPackageHistoryEntity savedPackage = customPackageHistoryPersistencePort.save(customPackage);
 
         List<TestHistoryEntity> savedTestEntities = request.getTests()
