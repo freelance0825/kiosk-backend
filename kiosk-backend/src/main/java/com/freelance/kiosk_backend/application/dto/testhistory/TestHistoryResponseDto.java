@@ -14,4 +14,6 @@ public class TestHistoryResponseDto {
     private String result;
 
     private String range;
+
+    private Boolean isGeneralTest;
 }

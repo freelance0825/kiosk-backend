@@ -25,9 +25,6 @@ public class CustomPackageHistoryEntity {
     @Enumerated(EnumType.STRING)
     private TestCustomName name;
 
-    @Column(name = "is_general_test")
-    private Boolean isGeneralTest = false;
-
     @Column(name = "created_at" ,nullable = false)
     @CreationTimestamp
     private OffsetDateTime createdAt;

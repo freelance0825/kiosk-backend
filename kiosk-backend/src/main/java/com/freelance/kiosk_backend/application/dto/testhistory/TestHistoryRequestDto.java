@@ -13,5 +13,6 @@ public class TestHistoryRequestDto {
 
     private String range;
 
+    private Boolean isGeneralTest;
 
 }

@@ -16,8 +16,6 @@ public class CustomPackageHistoryResponseDto {
 
     private String patientId;
 
-    private Boolean isGeneralTest;
-
     private List<TestHistoryResponseDto> tests;
 
 }

@@ -59,14 +59,7 @@ public class MedicalTestService {
             dto.setCreatedAt(first.getCreatedAt());
             dto.setPackageName(entry.getKey());
 
-            // Set isGeneralTest from CustomPackageEntity or MedicalPackageEntity
-            if (first.getCustomPackage() != null) {
-                dto.setIsGeneralTest(String.valueOf(first.getCustomPackage().getIsGeneralTest()));
-            } else if (first.getMedicalPackage() != null) {
-                dto.setIsGeneralTest(String.valueOf(first.getMedicalPackage().getIsGeneralTest()));
-            } else {
-                dto.setIsGeneralTest(null); // or null if you prefer
-            }
+
 
             List<TestHistoryResponseDto> testDtos = tests.stream().map(test -> {
                 TestHistoryResponseDto t = new TestHistoryResponseDto();
@@ -74,6 +67,7 @@ public class MedicalTestService {
                 t.setName(test.getName());
                 t.setResult(test.getResult());
                 t.setRange(test.getRange().name());
+                t.setIsGeneralTest(test.getIsGeneralTest());
                 return t;
             }).toList();
 

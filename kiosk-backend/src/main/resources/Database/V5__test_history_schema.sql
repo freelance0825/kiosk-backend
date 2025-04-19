@@ -6,6 +6,7 @@ CREATE TABLE test_history (
     name VARCHAR(255),
     result TEXT,
     range VARCHAR(255),
+     is_general_test BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
 
     FOREIGN KEY (patient_id) REFERENCES users(id) ON DELETE CASCADE,

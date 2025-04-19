@@ -50,7 +50,6 @@ public class CustomPackageHistoryService {
         CustomPackageHistoryEntity customPackage = new CustomPackageHistoryEntity();
         customPackage.setPatient(patient);
         customPackage.setName(TestCustomName.valueOf(request.getName()));
-        customPackage.setIsGeneralTest(request.getIsGeneralTest());
         CustomPackageHistoryEntity savedPackage = customPackageHistoryPersistencePort.save(customPackage);
 
         List<TestHistoryEntity> savedTestEntities = request.getTests()
@@ -62,6 +61,7 @@ public class CustomPackageHistoryService {
                     testHistoryEntity.setName(testHistoryDto.getName());
                     testHistoryEntity.setResult(testHistoryDto.getResult());
                     testHistoryEntity.setRange(TestRange.valueOf(testHistoryDto.getRange()));
+                    testHistoryEntity.setIsGeneralTest(testHistoryDto.getIsGeneralTest());
                     return testHistoryEntity;
                 })
                 .map(testHistoryPersistencePort::save)
