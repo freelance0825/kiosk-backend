@@ -9,6 +9,8 @@ public class AvailableTimeslotResponseDto {
 
     private String date;
 
-    private List<String> availableTimeSlots;
+   // private List<String> availableTimeSlots;
+
+    private List<TimeslotDto> availableTimeSlots;
 
 }

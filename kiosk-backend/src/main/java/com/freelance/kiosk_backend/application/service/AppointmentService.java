@@ -5,14 +5,18 @@ import com.freelance.kiosk_backend.application.dto.medicine.MedicineDto;
 import com.freelance.kiosk_backend.domain.entity.*;
 import com.freelance.kiosk_backend.domain.mapper.AppointmentMapper;
 import com.freelance.kiosk_backend.infrastructure.port.*;
+import com.freelance.kiosk_backend.shared.exception.DoctorNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.*;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -162,28 +166,42 @@ public class AppointmentService {
     }
 
     public AvailableTimeslotResponseDto getAvailableTimeSlotsForDay(Long doctorId, AvailableTimeslotRequestDto request) {
-        LocalDate date = request.getDate();
+        if (!doctorPersistencePort.existsById(doctorId)) {
+            throw new DoctorNotFoundException("Doctor with ID " + doctorId + " not found");
+        }
+
         ZoneId zone = ZoneId.of(request.getZoneId());
+        LocalDate requestedDate = request.getDate();
 
-        // Get all appointments for the doctor
-        List<AppointmentEntity> appointments = appointmentPersistencePort.findByDoctorId(doctorId);
+        List<TimeslotDto> allTimeslots;
 
-        // Filter to appointments on the requested date in the requested timezone
-        List<AppointmentEntity> appointmentsOnDate = appointments.stream()
-                .filter(a -> a.getDateTime().atZoneSameInstant(zone).toLocalDate().equals(date))
-                .toList();
+        if (requestedDate != null) {
+            // Generate standard timeslots for the specific date
+            allTimeslots = generateStandardTimeslotsForDate(requestedDate, zone);
 
-        // Generate all possible time slots for that day
-        List<String> allTimeSlots = generateTimeSlotsForDay(date, zone);
+            // Fetch appointments and update availability
+            List<AppointmentEntity> doctorAppointments = appointmentPersistencePort.findByDoctorId(doctorId);
 
-        // Remove time slots that are already booked
-        List<String> availableTimeSlots = removeBookedTimeSlots(allTimeSlots, appointmentsOnDate, zone);
+            Set<String> bookedTimes = doctorAppointments.stream()
+                    .filter(a -> a.getDateTime().atZoneSameInstant(zone).toLocalDate().equals(requestedDate))
+                    .map(a -> a.getDateTime().atZoneSameInstant(zone).toLocalTime().truncatedTo(ChronoUnit.MINUTES).toString())
+                    .collect(Collectors.toSet());
+
+            for (TimeslotDto slot : allTimeslots) {
+                if (bookedTimes.contains(slot.getTime())) {
+                    slot.setAvailable(false);
+                }
+            }
+        } else {
+            // Generate default open slots (e.g., for today or any placeholder date)
+            allTimeslots = generateStandardTimeslotsForDate(LocalDate.now(zone), zone);
+        }
 
         // Build response
-        AvailableTimeslotResponseDto responseDto = new AvailableTimeslotResponseDto();
-        responseDto.setDate(date.toString());
-        responseDto.setAvailableTimeSlots(availableTimeSlots);
-        return responseDto;
+        AvailableTimeslotResponseDto response = new AvailableTimeslotResponseDto();
+        response.setDate(requestedDate != null ? requestedDate.toString() : null);
+        response.setAvailableTimeSlots(allTimeslots);
+        return response;
     }
 
     private AppointmentEntity createAppointment(AppointmentRequestDto dto, DoctorEntity doctor,
@@ -232,6 +250,51 @@ public class AppointmentService {
         notificationPersistencePort.save(notification);
     }
 
+
+    private List<TimeslotDto> generateStandardTimeslotsForDate(LocalDate date, ZoneId zone) {
+        List<TimeslotDto> timeslots = new ArrayList<>();
+        LocalTime startTime = LocalTime.of(8, 0); // 8:00 AM
+        LocalTime endTime = LocalTime.of(17, 0); // 5:00 PM
+
+        while (startTime.isBefore(endTime)) {
+            ZonedDateTime zdt = ZonedDateTime.of(date, startTime, ZoneId.of("Asia/Manila")); // always generate in PHT
+            TimeslotDto slot = new TimeslotDto();
+            slot.setTime(zdt.toLocalTime().toString());
+            slot.setAvailable(true); // default true, updated later if booked
+            timeslots.add(slot);
+            startTime = startTime.plusMinutes(30);
+        }
+
+        return timeslots;
+    }
+
+
+   /* public AvailableTimeslotResponseDto getAvailableTimeSlotsForDay(Long doctorId, AvailableTimeslotRequestDto request) {
+        LocalDate date = request.getDate();
+        ZoneId zone = ZoneId.of(request.getZoneId());
+
+        // Get all appointments for the doctor
+        List<AppointmentEntity> appointments = appointmentPersistencePort.findByDoctorId(doctorId);
+
+        // Filter to appointments on the requested date in the requested timezone
+        List<AppointmentEntity> appointmentsOnDate = appointments.stream()
+                .filter(a -> a.getDateTime().atZoneSameInstant(zone).toLocalDate().equals(date))
+                .toList();
+
+        // Generate all possible time slots for that day
+        List<String> allTimeSlots = generateTimeSlotsForDay(date, zone);
+
+        // Remove time slots that are already booked
+        List<String> availableTimeSlots = removeBookedTimeSlots(allTimeSlots, appointmentsOnDate, zone);
+
+        // Build response
+        AvailableTimeslotResponseDto responseDto = new AvailableTimeslotResponseDto();
+        responseDto.setDate(date.toString());
+        responseDto.setAvailableTimeSlots(availableTimeSlots);
+        return responseDto;
+    }
+
+
     private List<String> generateTimeSlotsForDay(LocalDate date, ZoneId zone) {
         List<String> timeSlots = new ArrayList<>();
         LocalTime startTime = LocalTime.of(8, 0); // 8:00 AM
@@ -255,6 +318,6 @@ public class AppointmentService {
 
         allTimeSlots.removeAll(bookedTimeSlots);
         return allTimeSlots;
-    }
+    }*/
 
 }

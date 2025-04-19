@@ -15,4 +15,6 @@ public interface DoctorPersistencePort {
 
     Optional<List<DoctorEntity>> findAllByStatus(String status);
 
+    boolean existsById(Long id);
+
 }

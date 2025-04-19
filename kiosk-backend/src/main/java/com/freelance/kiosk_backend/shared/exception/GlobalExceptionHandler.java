@@ -15,6 +15,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
+    // Handle Patient Not Found Exception
+    @ExceptionHandler(DoctorNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlePatientNotFoundException(DoctorNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse("Doctor Not Found Exception", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
     // Handle Invalid Test Name Exception
     @ExceptionHandler(InvalidTestNameException.class)
     public ResponseEntity<ErrorResponse> handleInvalidTestNameException(InvalidTestNameException ex) {

@@ -38,4 +38,9 @@ public class DoctorPersistenceAdapter implements DoctorPersistencePort {
         return doctorRepository.findAllByStatus(status);
     }
 
+    @Override
+    public boolean existsById(Long id) {
+        return doctorRepository.existsById(id);
+    }
+
 }
