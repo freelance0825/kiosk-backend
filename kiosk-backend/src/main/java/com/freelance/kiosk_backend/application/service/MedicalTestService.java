@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 public class MedicalTestService {
 
     private final TestHistoryPersistencePort testHistoryPersistencePort;
-
     private final MedicalTestMapper medicalTestMapper;
 
     public List<MedicalTestHistoryResponseDto> getMedicalTestHistoryByPatientId(Long patientId) {
@@ -59,6 +58,15 @@ public class MedicalTestService {
             dto.setUserPhoneNumber(first.getUsers().getPhoneNumber());
             dto.setCreatedAt(first.getCreatedAt());
             dto.setPackageName(entry.getKey());
+
+            // Set isGeneralTest from CustomPackageEntity or MedicalPackageEntity
+            if (first.getCustomPackage() != null) {
+                dto.setIsGeneralTest(String.valueOf(first.getCustomPackage().getIsGeneralTest()));
+            } else if (first.getMedicalPackage() != null) {
+                dto.setIsGeneralTest(String.valueOf(first.getMedicalPackage().getIsGeneralTest()));
+            } else {
+                dto.setIsGeneralTest(null); // or null if you prefer
+            }
 
             List<TestHistoryResponseDto> testDtos = tests.stream().map(test -> {
                 TestHistoryResponseDto t = new TestHistoryResponseDto();

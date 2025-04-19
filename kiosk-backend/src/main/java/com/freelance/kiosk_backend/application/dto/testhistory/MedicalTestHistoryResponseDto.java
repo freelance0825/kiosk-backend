@@ -17,6 +17,8 @@ public class MedicalTestHistoryResponseDto {
 
     private String packageName;
 
+    private String isGeneralTest;
+
     private String userAge;
 
     private String userGender;
